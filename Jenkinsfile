@@ -61,7 +61,7 @@ pipeline {
         stage('Stash Application') {
     steps {
         stash name: 'application-files',
-              includes: 'app/index.html,Dockerfile'
+              includes: 'app/index.html,Dockerfile,k8s/**'
     }
 }
 stage('Use Stashed Files') {
@@ -93,6 +93,14 @@ stage('Use Stashed Files') {
     steps {
         input message: 'Do you want to continue with deployment?',
               ok: 'Deploy'
+    }
+}
+stage('Deploy to Kubernetes') {
+    steps {
+        sh '''
+            kubectl apply -f k8s/deployment.yaml
+            kubectl apply -f k8s/service.yaml
+        '''
     }
 }
     }
