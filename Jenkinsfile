@@ -89,6 +89,12 @@ stage('Use Stashed Files') {
                 }
             }
         }
+        stage('Approval') {
+    steps {
+        input message: 'Do you want to continue with deployment?',
+              ok: 'Deploy'
+    }
+}
     }
 
     post {
