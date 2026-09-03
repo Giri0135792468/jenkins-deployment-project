@@ -58,7 +58,22 @@ pipeline {
                 }
             }
         }
+        stage('Stash Application') {
+    steps {
+        stash name: 'application-files',
+              includes: 'app/index.html,Dockerfile'
+    }
+}
+stage('Use Stashed Files') {
+    steps {
+        deleteDir()
 
+        unstash 'application-files'
+
+        sh 'ls -la'
+        sh 'ls -la app'
+    }
+}
         stage('Push Docker Image') {
             steps {
                 withCredentials([
