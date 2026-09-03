@@ -20,7 +20,14 @@ pipeline {
     }
 
     stages {
-
+         stage('Stage Environment') {
+            environment {
+               STAGE_MESSAGE = 'This exists only in this stage'
+            }
+           steps {
+                echo "${STAGE_MESSAGE}"
+            }
+        }
         stage('Show Parameters') {
             steps {
                 echo "Application: ${APP_NAME}"
