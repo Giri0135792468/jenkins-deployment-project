@@ -87,6 +87,15 @@ stage('Deploy to Kubernetes') {
         '''
     }
 }
+stage('Verify Deployment') {
+    steps {
+        sh '''
+            kubectl rollout status deployment/jenkins-demo-app
+            kubectl get pods
+            kubectl get svc
+        '''
+    }
+}
 stage('Archive Artifacts') {
     steps {
         archiveArtifacts artifacts: 'k8s/*.yaml', fingerprint: true
