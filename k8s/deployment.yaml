@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: jenkins-demo-app
-          image: girijos/jenkins-demo-app:v10
+          image: girijos/jenkins-demo-app:v11
           ports:
             - containerPort: 80

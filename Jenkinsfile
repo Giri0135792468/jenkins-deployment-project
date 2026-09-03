@@ -5,7 +5,7 @@ pipeline {
 
     environment {
         APP_NAME = 'jenkins-demo-app'
-        APP_VERSION = 'v10'
+        APP_VERSION = 'v11'
     DEPLOY_ENV = 'dev'
     }
 
