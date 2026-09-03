@@ -43,16 +43,16 @@ pipeline {
         stage('Test Credentials') {
             steps {
                withCredentials([
-                  usernamePassword(
+                usernamePassword(
                   credentialsId: 'dockerhub-creds',
                   usernameVariable: 'DOCKER_USERNAME',
                   passwordVariable: 'DOCKER_PASSWORD'
-            )
-        ]) {
-            echo "Docker Hub username: ${DOCKER_USERNAME}"
+                )
+            ]) {
+             echo "Docker Hub username: ${DOCKER_USERNAME}"
+            }
         }
     }
-}
     post {
        always {
         echo 'Pipeline completed'
