@@ -52,6 +52,7 @@ pipeline {
             sh 'docker build -t ${DOCKER_USERNAME}/jenkins-demo-app:${APP_VERSION} .'
         }
     }
+       }
     stage('Push Docker Image') {
     steps {
         withCredentials([
