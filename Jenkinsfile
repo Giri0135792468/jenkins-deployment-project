@@ -52,6 +52,21 @@ pipeline {
             sh 'docker build -t ${DOCKER_USERNAME}/jenkins-demo-app:${APP_VERSION} .'
         }
     }
+    stage('Push Docker Image') {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'dockerhub-creds',
+                usernameVariable: 'DOCKER_USERNAME',
+                passwordVariable: 'DOCKER_PASSWORD'
+            )
+        ]) {
+            sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+            sh 'docker push ${DOCKER_USERNAME}/jenkins-demo-app:${APP_VERSION}'
+            sh 'docker logout'
+        }
+    }
+}
 }
     }
     post {
