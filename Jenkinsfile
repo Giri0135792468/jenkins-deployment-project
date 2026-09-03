@@ -18,20 +18,24 @@ pipeline {
     environment {
         APP_NAME = 'jenkins-demo-app'
     }
+
     options {
         timeout(time: 5, unit: 'MINUTES')
         disableConcurrentBuilds()
     }
 
     stages {
-         stage('Stage Environment') {
+
+        stage('Stage Environment') {
             environment {
-               STAGE_MESSAGE = 'This exists only in this stage'
+                STAGE_MESSAGE = 'This exists only in this stage'
             }
-           steps {
+
+            steps {
                 echo "${STAGE_MESSAGE}"
             }
         }
+
         stage('Show Parameters') {
             steps {
                 echo "Application: ${APP_NAME}"
@@ -39,47 +43,50 @@ pipeline {
                 echo "Environment: ${params.DEPLOY_ENV}"
             }
         }
-       stage('Build Docker Image') {
-          steps {
-              withCredentials([
-                usernamePassword(
-                   credentialsId: 'dockerhub-creds',
-                   usernameVariable: 'DOCKER_USERNAME',
-                   passwordVariable: 'DOCKER_PASSWORD'
-            )
-        ]) {
-            sh 'docker --version'
-            sh 'docker build -t ${DOCKER_USERNAME}/jenkins-demo-app:${APP_VERSION} .'
+
+        stage('Build Docker Image') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    sh 'docker --version'
+                    sh 'docker build -t ${DOCKER_USERNAME}/jenkins-demo-app:${APP_VERSION} .'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )
+                ]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                    sh 'docker push ${DOCKER_USERNAME}/jenkins-demo-app:${APP_VERSION}'
+                    sh 'docker logout'
+                }
+            }
         }
     }
-       }
-    stage('Push Docker Image') {
-    steps {
-        withCredentials([
-            usernamePassword(
-                credentialsId: 'dockerhub-creds',
-                usernameVariable: 'DOCKER_USERNAME',
-                passwordVariable: 'DOCKER_PASSWORD'
-            )
-        ]) {
-            sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-            sh 'docker push ${DOCKER_USERNAME}/jenkins-demo-app:${APP_VERSION}'
-            sh 'docker logout'
-        }
-    }
-}
-}
-    
+
     post {
-       always {
-        echo 'Pipeline completed'
-    }
+        always {
+            echo 'Pipeline completed'
+        }
 
-    success {
-        echo 'Deployment pipeline succeeded'
-    }
+        success {
+            echo 'Deployment pipeline succeeded'
+        }
 
-    failure {
-        echo 'Deployment pipeline failed'
+        failure {
+            echo 'Deployment pipeline failed'
+        }
     }
-    }
+}
