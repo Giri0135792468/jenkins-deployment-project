@@ -5,7 +5,7 @@ pipeline {
 
     environment {
         APP_NAME = 'jenkins-demo-app'
-        APP_VERSION = 'v1'
+        APP_VERSION = 'v10'
     DEPLOY_ENV = 'dev'
     }
 
@@ -15,7 +15,11 @@ pipeline {
     }
 
     stages {
-
+stage('Checkout') {
+    steps {
+        checkout scm
+    }
+}
         stage('Stage Environment') {
             environment {
                 STAGE_MESSAGE = 'This exists only in this stage'
