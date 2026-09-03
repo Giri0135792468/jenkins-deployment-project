@@ -1,19 +1,31 @@
 pipeline {
     agent any
 
+    parameters {
+        choice(
+            name: 'DEPLOY_ENV',
+            choices: ['dev', 'staging', 'prod'],
+            description: 'Select deployment environment'
+        )
+
+        string(
+            name: 'APP_VERSION',
+            defaultValue: 'v1',
+            description: 'Docker image version'
+        )
+    }
+
     environment {
         APP_NAME = 'jenkins-demo-app'
-        APP_VERSION = 'v1'
-        DEPLOY_ENV = 'dev'
     }
 
     stages {
 
-        stage('Test Jenkins') {
+        stage('Show Parameters') {
             steps {
                 echo "Application: ${APP_NAME}"
-                echo "Version: ${APP_VERSION}"
-                echo "Environment: ${DEPLOY_ENV}"
+                echo "Version: ${params.APP_VERSION}"
+                echo "Environment: ${params.DEPLOY_ENV}"
             }
         }
     }
