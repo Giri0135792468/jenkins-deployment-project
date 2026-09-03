@@ -39,19 +39,20 @@ pipeline {
                 echo "Environment: ${params.DEPLOY_ENV}"
             }
         }
-        stage('Test Credentials') {
-            steps {
-               withCredentials([
+       stage('Build Docker Image') {
+          steps {
+              withCredentials([
                 usernamePassword(
-                  credentialsId: 'dockerhub-creds',
-                  usernameVariable: 'DOCKER_USERNAME',
-                  passwordVariable: 'DOCKER_PASSWORD'
-                )
-            ]) {
-             echo "Docker Hub username: ${DOCKER_USERNAME}"
-            }
+                   credentialsId: 'dockerhub-creds',
+                   usernameVariable: 'DOCKER_USERNAME',
+                   passwordVariable: 'DOCKER_PASSWORD'
+            )
+        ]) {
+            sh 'docker --version'
+            sh 'docker build -t ${DOCKER_USERNAME}/jenkins-demo-app:${APP_VERSION} .'
         }
     }
+}
     }
     post {
        always {
