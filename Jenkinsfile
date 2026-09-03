@@ -1,22 +1,12 @@
 pipeline {
     agent any
 
-    parameters {
-        choice(
-            name: 'DEPLOY_ENV',
-            choices: ['dev', 'staging', 'prod'],
-            description: 'Select deployment environment'
-        )
 
-        string(
-            name: 'APP_VERSION',
-            defaultValue: 'v1',
-            description: 'Docker image version'
-        )
-    }
 
     environment {
         APP_NAME = 'jenkins-demo-app'
+        APP_VERSION = 'v1'
+    DEPLOY_ENV = 'dev'
     }
 
     options {
@@ -36,13 +26,7 @@ pipeline {
             }
         }
 
-        stage('Show Parameters') {
-            steps {
-                echo "Application: ${APP_NAME}"
-                echo "Version: ${params.APP_VERSION}"
-                echo "Environment: ${params.DEPLOY_ENV}"
-            }
-        }
+        
 
         stage('Build Docker Image') {
             steps {
@@ -101,6 +85,11 @@ stage('Deploy to Kubernetes') {
             kubectl apply -f k8s/deployment.yaml
             kubectl apply -f k8s/service.yaml
         '''
+    }
+}
+stage('Archive Artifacts') {
+    steps {
+        archiveArtifacts artifacts: 'k8s/*.yaml', fingerprint: true
     }
 }
     }
