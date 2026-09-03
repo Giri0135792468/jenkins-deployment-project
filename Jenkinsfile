@@ -39,7 +39,6 @@ pipeline {
                 echo "Environment: ${params.DEPLOY_ENV}"
             }
         }
-    }
         stage('Test Credentials') {
             steps {
                withCredentials([
@@ -52,6 +51,7 @@ pipeline {
              echo "Docker Hub username: ${DOCKER_USERNAME}"
             }
         }
+    }
     }
     post {
        always {
