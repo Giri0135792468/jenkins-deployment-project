@@ -114,6 +114,10 @@ stage('Archive Artifacts') {
 
         success {
             echo 'Deployment pipeline succeeded'
+            sh '''
+            kubectl rollout undo deployment/jenkins-demo-app
+            kubectl rollout status deployment/jenkins-demo-app --timeout=60s
+        '''
         }
 
         failure {
