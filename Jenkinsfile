@@ -18,6 +18,10 @@ pipeline {
     environment {
         APP_NAME = 'jenkins-demo-app'
     }
+    options {
+        timeout(time: 5, unit: 'MINUTES')
+        disableConcurrentBuilds()
+    }
 
     stages {
          stage('Stage Environment') {
