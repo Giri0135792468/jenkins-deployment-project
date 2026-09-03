@@ -30,6 +30,7 @@ pipeline {
             }
            steps {
                 echo "${STAGE_MESSAGE}"
+                sh 'exit 1'
             }
         }
         stage('Show Parameters') {
