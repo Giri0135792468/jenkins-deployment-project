@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-demo-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jenkins-demo-app
+  template:
+    metadata:
+      labels:
+        app: jenkins-demo-app
+    spec:
+      containers:
+        - name: jenkins-demo-app
+          image: girijos/jenkins-demo-app:v1
+          ports:
+            - containerPort: 80
